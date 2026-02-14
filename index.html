@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>G.P.O. Central Database</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    background-color: #050505;
+    color: #00ff88;
+    transition: background 1s;
+}
+
+header {
+    background: black;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #00ff88;
+    letter-spacing: 3px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    background: #0a0a0a;
+}
+
+nav button {
+    background: black;
+    color: #00ff88;
+    border: 1px solid #00ff88;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+nav button:hover {
+    background: #00ff88;
+    color: black;
+}
+
+section {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    padding: 20px;
+}
+
+.active {
+    display: block;
+    opacity: 1;
+}
+
+.card {
+    border: 1px solid #00ff88;
+    padding: 15px;
+    margin: 10px 0;
+    transition: 0.3s;
+}
+
+.card:hover {
+    box-shadow: 0 0 10px #00ff88;
+}
+
+.login-screen {
+    text-align: center;
+    margin-top: 100px;
+}
+
+input {
+    background: black;
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    padding: 8px;
+}
+
+.glitch {
+    animation: glitch 0.8s infinite;
+}
+
+@keyframes glitch {
+    0% { text-shadow: 2px 0 red; }
+    50% { text-shadow: -2px 0 blue; }
+    100% { text-shadow: 2px 0 red; }
+}
+
+#corruptionBarContainer {
+    width: 80%;
+    margin: 20px auto;
+    border: 1px solid #00ff88;
+    height: 20px;
+}
+
+#corruptionBar {
+    height: 100%;
+    width: 0%;
+    background: lime;
+    transition: width 1s;
+}
+
+.footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.secret {
+    display: none;
+    padding: 20px;
+    text-align: center;
+    color: red;
+}
+</style>
+</head>
+<body>
+
+<div id="login" class="login-screen">
+<h1 class="glitch">G.P.O. INTERNAL SERVER</h1>
+<p>Enter Access Code:</p>
+<input type="password" id="accessCode">
+<button onclick="login()">ACCESS</button>
+<p id="loginError" style="color:red;"></p>
+</div>
+
+<div id="database" style="display:none;">
+
+<header>HOKI HOKI — G.P.O. CENTRAL DATABASE V2</header>
+
+<div id="corruptionBarContainer">
+<div id="corruptionBar"></div>
+</div>
+
+<nav>
+<button onclick="showSection('characters')">Characters</button>
+<button onclick="showSection('timeline')">Timeline</button>
+<button onclick="showSection('threat')">Threat Monitor</button>
+<button onclick="showSection('hospital')">Hospital Logs</button>
+<button onclick="showSection('elepathy')">Elepathy</button>
+</nav>
+
+<!-- CHARACTERS -->
+<section id="characters" class="active">
+<h2>Character Files</h2>
+
+<div class="card"><h3>Enaki Usegi</h3><p>Age: 14 — Active G.P.O. Member</p></div>
+<div class="card"><h3>Kitana Usegi</h3><p>Status: Active — Tactical Specialist</p></div>
+<div class="card"><h3>Tonni</h3><p>Status: Active — Loyalty Index High</p></div>
+<div class="card" id="yosebiCard"><h3>Yosebi</h3><p>Status: Stable</p></div>
+<div class="card"><h3>Gigagami</h3><p>Status: Hospitalized</p></div>
+
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+<h2>Incident Timeline</h2>
+<div class="card">Year 1 — Initial Ghoul Attack</div>
+<div class="card">Year 2 — G.P.O. Recruitment</div>
+<div class="card">Season 3 — China Operation</div>
+<div class="card">Season 4 — Elepathy Corruption Event</div>
+</section>
+
+<!-- THREAT -->
+<section id="threat">
+<h2>Global Threat Monitor</h2>
+<div class="card">
+<p>Ghoul Activity: HIGH</p>
+<p>Mutation Spread: MODERATE</p>
+<p>Elepathy Influence: CRITICAL</p>
+</div>
+</section>
+
+<!-- HOSPITAL -->
+<section id="hospital">
+<h2>Hospital Records</h2>
+<div class="card">Joichiro — Stabilized</div>
+<div class="card">Gigagami — Critical</div>
+</section>
+
+<!-- ELEPATHY -->
+<section id="elepathy">
+<h2 onclick="unlockElepathy()" style="cursor:pointer;color:red;">
+[CLASSIFIED FILE — CLICK TO ATTEMPT ACCESS]
+</h2>
+<div id="elepathyContent" style="display:none;" class="card">
+<p>Elepathy: Unknown celestial object.</p>
+<p>Origin: Post-Jupiter Explosion Event.</p>
+<p>Effect: Amplifies ghoul energy & mental instability.</p>
+<p>Status: Civilian exposure forbidden.</p>
+</div>
+</section>
+
+<div id="secretPage" class="secret">
+<h1>ACCESS GRANTED — SHARK FILE</h1>
+<p>Experiment Subject: Shark</p>
+<p>Status: Contained</p>
+<p>Note: Subject displays emotional bonding behavior.</p>
+</div>
+
+<div class="footer">
+G.P.O. Secure Network — Unauthorized Access Punishable
+</div>
+
+</div>
+
+<script>
+
+let corruption = 0;
+let secretCode = "";
+
+function login() {
+    const code = document.getElementById("accessCode").value;
+    if(code === "GPO-ENAKI-14") {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("database").style.display = "block";
+        startCorruption();
+    } else {
+        document.getElementById("loginError").innerText = "ACCESS DENIED.";
+        glitchSound();
+    }
+}
+
+function showSection(id) {
+    document.querySelectorAll("section").forEach(sec => {
+        sec.classList.remove("active");
+    });
+    document.getElementById(id).classList.add("active");
+    glitchSound();
+}
+
+function unlockElepathy() {
+    let pass = prompt("ENTER CLASSIFIED KEY:");
+    if(pass === "JUPITER-FALL") {
+        document.getElementById("elepathyContent").style.display = "block";
+        glitchSound();
+    } else {
+        alert("ACCESS RESTRICTED.");
+    }
+}
+
+function startCorruption() {
+    setInterval(() => {
+        if(corruption < 100) {
+            corruption += 2;
+            document.getElementById("corruptionBar").style.width = corruption + "%";
+
+            if(corruption > 50) {
+                document.body.style.background = "#100000";
+            }
+
+            if(corruption > 70) {
+                document.getElementById("yosebiCard").innerHTML =
+                    "<h3>Yosebi</h3><p>Status: Corruption Increasing...</p>";
+            }
+
+            if(corruption > 85) {
+                document.body.classList.add("glitch");
+            }
+        }
+    }, 2000);
+}
+
+function glitchSound() {
+    let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let osc = audioCtx.createOscillator();
+    let gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = "square";
+    osc.frequency.value = 180;
+    gain.gain.value = 0.05;
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.1);
+}
+
+document.addEventListener("keydown", (e) => {
+    secretCode += e.key.toUpperCase();
+    if(secretCode.includes("SHARK")) {
+        document.getElementById("secretPage").style.display = "block";
+        glitchSound();
+    }
+});
+
+</script>
+
+</body>
+</html>
